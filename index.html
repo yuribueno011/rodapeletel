@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rodapé Letel do Brasil</title>
+
+  <!-- Importação de fontes do Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Importação dos ícones Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    /* =====================================================
+       RESET APENAS PARA O RODAPÉ - ISOLAMENTO TOTAL
+    ===================================================== */
+    .footer-wrapper * {
+      box-sizing: border-box;
+    }
+    
+    /* Container principal que isola todo o rodapé */
+    .footer-wrapper {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      /* CRÍTICO: Garante isolamento total */
+      position: relative;
+      z-index: 1;
+      /* Remove qualquer herança de fundo */
+      background: transparent;
+      /* Garante que não haja overflow */
+      overflow: hidden;
+    }
+
+    /* =====================================================
+       SEÇÃO DO MAPA GOOGLE - FUNDO NEUTRO
+    ===================================================== */
+    .map-section {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+      border-radius: 0 0 24px 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      /* Fundo neutro que não interfere com a página */
+      background: #f8f9fa;
+      /* Garante posicionamento controlado */
+      z-index: 2;
+    }
+
+    .map-link {
+      display: block;
+      width: 100%;
+      height: 450px;
+      position: relative;
+      overflow: hidden;
+      /* Mantém fundo neutro */
+      background: #f8f9fa;
+    }
+
+    /* Overlay sutil sobre o mapa */
+    .map-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(15, 117, 67, 0.05) 0%, rgba(15, 117, 67, 0.02) 100%);
+      z-index: 1;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    /* Efeito hover do overlay do mapa */
+    .map-link:hover::before {
+      background: linear-gradient(135deg, rgba(15, 117, 67, 0.08) 0%, rgba(15, 117, 67, 0.04) 100%);
+    }
+
+    /* Configurações do iframe do mapa */
+    .map-iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      filter: saturate(1.1) contrast(1.05);
+      transition: all 0.3s ease;
+    }
+
+    /* Efeito de zoom sutil no mapa */
+    .map-link:hover .map-iframe {
+      transform: scale(1.01);
+    }
+
+    /* =====================================================
+       FOOTER PRINCIPAL - FUNDO VERDE TOTALMENTE CONTROLADO
+    ===================================================== */
+    .footer-main {
+      /* CORREÇÃO PRINCIPAL: Fundo verde restrito ao footer */
+      background: linear-gradient(135deg, #064229 0%, #0A5A38 50%, #0F7543 100%);
+      color: #ffffff;
+      padding: 60px 0 0;
+      position: relative;
+      /* Remove qualquer margem que possa vazar */
+      margin: 0;
+      /* Garante que não haja overflow para fora */
+      overflow: hidden;
+      /* Isola o footer */
+      isolation: isolate;
+      /* Garante que o footer seja contido */
+      contain: layout style;
+    }
+
+    /* Efeito de luz radial APENAS no footer */
+    .footer-main::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+      /* Mantém o efeito dentro do footer */
+      z-index: 0;
+    }
+
+    /* =====================================================
+       CONTAINER E GRID DAS COLUNAS
+    ===================================================== */
+    .footer-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 48px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* =====================================================
+       COLUNAS DO FOOTER - CARDS COM EFEITOS SUAVES
+    ===================================================== */
+    .footer-col {
+      position: relative;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 32px 28px;
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Barra colorida no topo dos cards */
+    .footer-col::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #25D366, #20c55e);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    /* Efeito hover suave dos cards */
+    .footer-col:hover {
+      transform: translateY(-4px);
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Animação da barra colorida */
+    .footer-col:hover::before {
+      transform: scaleX(1);
+    }
+
+    /* =====================================================
+       ESPAÇAMENTO CONTROLADO POR COLUNA
+    ===================================================== */
+    
+    /* COLUNA 1 - SAC */
+    .footer-col-1 .telefone-label,
+    .footer-col-1 .horario-label,
+    .footer-col-1 .email-label {
+      margin-bottom: 4px;
+    }
+
+    .footer-col-1 .telefone-numero,
+    .footer-col-1 .horario-texto {
+      margin-bottom: 16px;
+    }
+
+    .footer-col-1 .email-texto {
+      margin-bottom: 0;
+    }
+
+    /* COLUNA 2 - Endereço e WhatsApp */
+    .footer-col-2 .endereco-rua,
+    .footer-col-2 .endereco-cidade {
+      margin-bottom: 8px;
+    }
+
+    .footer-col-2 .endereco-cep {
+      margin-bottom: 16px;
+    }
+
+    .footer-col-2 .whatsapp-label {
+      margin-bottom: 4px;
+    }
+
+    .footer-col-2 .whatsapp-numero {
+      margin-bottom: 0;
+    }
+
+    /* COLUNAS 3 e 4 - Links */
+    .footer-col-3 p,
+    .footer-col-4 p {
+      margin: 0 0 12px 0;
+    }
+
+    .footer-col-3 p:last-child,
+    .footer-col-4 p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* =====================================================
+       TÍTULOS DAS COLUNAS
+    ===================================================== */
+    .footer-col h3 {
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 24px 0;
+      letter-spacing: -0.025em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* =====================================================
+       TEXTO E PARÁGRAFOS
+    ===================================================== */
+    .footer-col p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 400;
+    }
+
+    .footer-col strong {
+      color: #ffffff;
+      font-weight: 600;
+      display: block;
+    }
+
+    /* =====================================================
+       LINKS COM EFEITOS SUAVES
+    ===================================================== */
+    .footer-col a {
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      position: relative;
+      display: inline-block;
+      font-weight: 400;
+    }
+
+    /* Linha animada dos links */
+    .footer-col a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #25D366, #20c55e);
+      transition: width 0.3s ease;
+    }
+
+    /* Efeito hover dos links */
+    .footer-col a:hover {
+      color: #ffffff;
+      transform: translateX(4px);
+    }
+
+    .footer-col a:hover::after {
+      width: 100%;
+    }
+
+    /* =====================================================
+       SEÇÃO DAS REDES SOCIAIS
+    ===================================================== */
+    .footer-social {
+      text-align: center;
+      margin: 64px 0 2px;
+      padding: 32px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      position: relative;
+    }
+
+    /* Badge das redes sociais */
+    .footer-social::before {
+      content: 'Siga-nos nas redes sociais';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #0A5A38, #0F7543);
+      color: rgba(255, 255, 255, 0.9);
+      padding: 8px 24px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Container dos ícones sociais */
+    .social-links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    /* Ícones das redes sociais */
+    .social-links a {
+      width: 56px;
+      height: 56px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      font-size: 22px;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Efeito shimmer dos ícones sociais */
+    .social-links a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .social-links a:hover::before {
+      left: 100%;
+    }
+
+    /* Hover dos ícones sociais */
+    .social-links a:hover {
+      transform: translateY(-4px) scale(1.05);
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Cores específicas por rede social */
+    .social-links a[href*="facebook"]:hover { background: #1877f2; border-color: #1877f2; }
+    .social-links a[href*="instagram"]:hover { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); border-color: #e6683c; }
+    .social-links a[href*="youtube"]:hover { background: #ff0000; border-color: #ff0000; }
+    .social-links a[href*="tiktok"]:hover { background: #000000; border-color: #000000; }
+    .social-links a[href*="whatsapp"]:hover { background: #25D366; border-color: #25D366; }
+    .social-links a[href*="linkedin"]:hover { background: #0077b5; border-color: #0077b5; }
+
+    /* =====================================================
+       COPYRIGHT - FOOTER BOTTOM
+    ===================================================== */
+    .footer-bottom {
+      text-align: center;
+      padding: 32px 24px;
+      background: rgba(0, 0, 0, 0.2);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 400;
+      backdrop-filter: blur(10px);
+    }
+
+    /* =====================================================
+       BOTÕES FLUTUANTES
+    ===================================================== */
+    .floating-buttons {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 1000;
+    }
+
+    .whatsapp-float,
+    .back-to-top {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Shimmer dos botões flutuantes */
+    .whatsapp-float::before,
+    .back-to-top::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .whatsapp-float:hover::before,
+    .back-to-top:hover::before {
+      left: 100%;
+    }
+
+    /* Botão WhatsApp */
+    .whatsapp-float {
+      background: linear-gradient(135deg, #25D366, #20c55e);
+      color: white;
+    }
+
+    .whatsapp-float:hover {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 12px 40px rgba(37, 211, 102, 0.4);
+    }
+
+    /* Botão voltar ao topo */
+    .back-to-top {
+      background: linear-gradient(135deg, #064229, #0A5A38);
+      color: white;
+      display: none;
+    }
+
+    .back-to-top:hover {
+      transform: scale(1.1) rotate(-5deg);
+      box-shadow: 0 12px 40px rgba(10, 90, 56, 0.4);
+    }
+
+    /* =====================================================
+       RESPONSIVIDADE - MOBILE E TABLET
+    ===================================================== */
+    @media (max-width: 768px) {
+      .map-section {
+        border-radius: 0;
+      }
+      
+      .map-link {
+        height: 300px;
+      }
+
+      .footer-main {
+        padding: 40px 0 0;
+      }
+
+      .footer-container {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        padding: 0 20px;
+      }
+
+      .footer-col {
+        padding: 24px 20px;
+      }
+
+      .footer-col h3 {
+        font-size: 16px;
+        margin-bottom: 20px;
+      }
+
+      .footer-col p {
+        font-size: 14px;
+      }
+
+      /* Ajustes específicos mobile - SAC */
+      .footer-col-1 .telefone-numero,
+      .footer-col-1 .horario-texto {
+        margin-bottom: 12px;
+      }
+
+      /* Ajustes específicos mobile - Endereço */
+      .footer-col-2 .endereco-rua,
+      .footer-col-2 .endereco-cidade {
+        margin-bottom: 6px;
+      }
+
+      .footer-col-2 .endereco-cep {
+        margin-bottom: 12px;
+      }
+
+      .footer-col-3 p,
+      .footer-col-4 p {
+        margin: 0 0 10px 0;
+      }
+
+      .footer-social {
+        margin: 40px 0 32px;
+        padding: 24px 0;
+      }
+
+      .social-links {
+        gap: 12px;
+      }
+
+      .social-links a {
+        width: 48px;
+        height: 48px;
+        font-size: 18px;
+        border-radius: 12px;
+      }
+
+      .footer-bottom {
+        padding: 24px 20px;
+        font-size: 13px;
+      }
+
+      .floating-buttons {
+        bottom: 24px;
+        right: 24px;
+        gap: 12px;
+      }
+
+      .whatsapp-float,
+      .back-to-top {
+        width: 56px;
+        height: 56px;
+        font-size: 20px;
+      }
+    }
+
+    /* Mobile muito pequeno */
+    @media (max-width: 480px) {
+      .footer-container {
+        padding: 0 16px;
+      }
+
+      .footer-col {
+        padding: 20px 16px;
+        border-radius: 12px;
+      }
+
+      .footer-social::before {
+        font-size: 12px;
+        padding: 6px 16px;
+      }
+
+      .floating-buttons {
+        bottom: 20px;
+        right: 20px;
+      }
+
+      .whatsapp-float,
+      .back-to-top {
+        width: 52px;
+        height: 52px;
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Container wrapper que isola todo o rodapé -->
+  <div class="footer-wrapper">
+    
+    <!-- =====================================================
+         SEÇÃO DO MAPA DO GOOGLE
+    ===================================================== -->
+    <div class="map-section">
+      <a href="https://maps.app.goo.gl/Tea2AaAaUYp2QDGr6" class="map-link" target="_blank">
+        <iframe
+          class="map-iframe"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d765.6920533926162!2d-50.39955134671957!3d-25.867918619045003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94e7a3375c7e8d23%3A0xa99aab471c44d487!2sLetel%20do%20Brasil!5e0!3m2!1spt-BR!2sbr!4v1754566318730!5m2!1spt-BR!2sbr"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </a>
+    </div>
+
+    <!-- =====================================================
+         FOOTER PRINCIPAL COM FUNDO VERDE CONTROLADO
+    ===================================================== -->
+    <div class="footer-main">
+      <!-- Container das colunas -->
+      <div class="footer-container">
+        
+        <!-- COLUNA 1: SAC -->
+        <div class="footer-col footer-col-1">
+          <h3><i class="fas fa-headset"></i>Atendimento ao Consumidor (SAC)</h3>
+          <p class="telefone-label"><strong>Telefone:</strong></p>
+          <p class="telefone-numero">+55 42 3532 7271</p>
+          <p class="horario-label"><strong>Horário:</strong></p>
+          <p class="horario-texto">Segunda a Sexta das 7:30 às 17:30</p>
+          <p class="email-label"><strong>E-mail:</strong></p>
+          <p class="email-texto">
+            <a href="mailto:comercial@grupofamosa.com.br">comercial@grupofamosa.com.br</a>
+          </p>
+        </div>
+
+        <!-- COLUNA 2: Endereço e WhatsApp -->
+        <div class="footer-col footer-col-2">
+          <h3><i class="fas fa-map-marker-alt"></i>Endereço</h3>
+          <p class="endereco-rua">Av. Ulisses Faria Parque Industrial, 1998</p>
+          <p class="endereco-cidade">São Mateus do Sul, PR</p>
+          <p class="endereco-cep">CEP 83900-240</p>
+          <p class="whatsapp-label"><strong>WhatsApp:</strong></p>
+          <p class="whatsapp-numero">
+            <a href="https://wa.me/+554235327271">+55 42 3532 7271</a>
+          </p>
+        </div>
+
+        <!-- COLUNA 3: Links de contato -->
+        <div class="footer-col footer-col-3">
+          <h3><i class="fas fa-link"></i>Fale com a Letel</h3>
+          <p><a href="https://www.letel.com.br/parceiro/">Revendedor</a></p>
+          <p><a href="https://www.letel.com.br/representante/">Representante</a></p>
+          <p><a href="https://www.letel.com.br/seja-um-colaborador/">Seja um colaborador</a></p>
+        </div>
+
+        <!-- COLUNA 4: Navegação -->
+        <div class="footer-col footer-col-4">
+          <h3><i class="fas fa-chevron-right"></i>Navegação</h3>
+          <p><a href="https://www.letel.com.br/produtos/">Produtos</a></p>
+          <p><a href="https://www.letel.com.br/catalogos/">Catálogos</a></p>
+          <p><a href="https://www.letel.com.br/blog/">Blog</a></p>
+        </div>
+      </div>
+
+      <!-- =====================================================
+           REDES SOCIAIS
+      ===================================================== -->
+      <div class="footer-social">
+        <div class="social-links">
+          <a href="https://www.facebook.com/leteldobrasiloficial" target="_blank" title="Facebook">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="https://www.instagram.com/aleteldobrasil/" target="_blank" title="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://www.youtube.com/@leteldobrasil" target="_blank" title="YouTube">
+            <i class="fab fa-youtube"></i>
+          </a>
+          <a href="https://www.tiktok.com/@leteldobrasiloficial" target="_blank" title="TikTok">
+            <i class="fab fa-tiktok"></i>
+          </a>
+          <a href="https://wa.me/+554235327271" target="_blank" title="WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+          <a href="https://br.linkedin.com/company/leteldobrasiloficial" target="_blank" title="LinkedIn">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- =====================================================
+           COPYRIGHT
+      ===================================================== -->
+      <div class="footer-bottom">
+        &copy; 2025 Letel do Brasil. Todos os direitos reservados.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- =====================================================
+       BOTÕES FLUTUANTES
+  ===================================================== -->
+  <div class="floating-buttons">
+    <a href="https://wa.me/+554235327271" class="whatsapp-float" title="Fale conosco no WhatsApp" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <div class="back-to-top" onclick="scrollToTop()" title="Voltar ao topo">
+      <i class="fas fa-chevron-up"></i>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       JAVASCRIPT
+  ===================================================== -->
+  <script>
+    // Controle do botão "Voltar ao topo"
+    window.addEventListener('scroll', function () {
+      const btn = document.querySelector('.back-to-top');
+      if (window.scrollY > 400) {
+        btn.style.display = 'flex';
+        setTimeout(() => btn.style.opacity = '1', 10);
+      } else {
+        btn.style.opacity = '0';
+        setTimeout(() => btn.style.display = 'none', 300);
+      }
+    });
+
+    // Função de scroll suave para o topo
+    function scrollToTop() {
+      window.scrollTo({ 
+        top: 0, 
+        behavior: 'smooth' 
+      });
+    }
+
+    // Animação de entrada das colunas
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Observa todas as colunas do footer
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.footer-col').forEach(col => {
+        col.style.opacity = '0';
+        col.style.transform = 'translateY(30px)';
+        col.style.transition = 'all 0.6s ease';
+        observer.observe(col);
+      });
+    });
+  </script>
+</body>
+</html>
